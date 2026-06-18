@@ -12,8 +12,7 @@ export class UsersService {
         id: true,
         email: true,
         role: true,
-        firstName: true,
-        lastName: true,
+        name: true,
         avatarUrl: true,
       },
     });

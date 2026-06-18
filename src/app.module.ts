@@ -10,6 +10,7 @@ import { MediaModule } from './media/media.module';
 import { ResultsModule } from './results/results.module';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { EditionsModule } from './editions/editions.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ResultsModule,
     LeaderboardModule,
     PrismaModule,
+    EditionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

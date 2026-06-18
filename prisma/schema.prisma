@@ -50,8 +50,7 @@ model User {
   email        String @unique
   passwordHash String
 
-  firstName String?
-  lastName  String?
+  name      String?
   avatarUrl String?
 
   role UserRole @default(USER)
@@ -93,10 +92,10 @@ model Edition {
 
   description String?
 
-  startDate DateTime
-  endDate   DateTime
+  startDate DateTime?
+  endDate   DateTime?
 
-  isPublished Boolean @default(false)
+  isActive Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -132,10 +131,19 @@ model Team {
 
   editionId String
 
-  name        String
-  description String?
+  name  String
+  block String
 
-  logoUrl       String?
+  email String?
+
+  logoUrl String?
+
+  captainName String?
+  captainUrl  String?
+
+  viceCaptainName String?
+  viceCaptainUrl  String?
+
   introVideoUrl String?
 
   edition Edition @relation(fields: [editionId], references: [id], onDelete: Cascade)
@@ -143,10 +151,10 @@ model Team {
   members TeamMember[]
   results Result[]
   media   Media[]
+  votes   Vote[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  votes     Vote[]
 
   @@unique([editionId, name])
   @@map("teams")
@@ -172,30 +180,34 @@ model TeamMember {
 model Event {
   id String @id @default(uuid())
 
-  editionId  String
-  categoryId String
+  editionId String
 
-  name        String
+  name String
+
   description String?
 
-  venue String
+  venue String?
 
-  eventType  EventType
-  visibility EventVisibility @default(POINTS)
+  eventType EventType
+
+  visibility EventVisibility
+
+  maxPoints Int
 
   startTime DateTime
   endTime   DateTime
 
-  isPublished Boolean @default(false)
+  isActive Boolean @default(false)
 
-  edition  Edition  @relation(fields: [editionId], references: [id], onDelete: Cascade)
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  edition Edition @relation(fields: [editionId], references: [id])
 
-  results       Result[]
-  subscriptions EventSubscription[]
+  results Result[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  category           Category?           @relation(fields: [categoryId], references: [id])
+  categoryId         String?
+  eventSubscriptions EventSubscription[]
 
   @@map("events")
 }

@@ -7,10 +7,15 @@ import { JwtStrategy } from './jwt.strategy';
 
 import { UsersModule } from '../users/users.module';
 import { StringValue } from 'ms';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     UsersModule,
+
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
 
     JwtModule.register({
       secret: process.env.JWT_SECRET,
