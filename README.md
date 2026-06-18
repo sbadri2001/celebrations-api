@@ -1,98 +1,299 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+You can use the following as a `docs/architecture-overview.md` in your repository.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Celebrations Platform – Architecture Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Overview
 
-## Description
+Celebrations is a scalable event and team management platform designed to organize recurring celebrations, tournaments, sports, cultural events, and community activities. The platform enables administrators to manage editions, teams, events, schedules, results, media, voting, subscriptions, and leaderboards while providing participants with a modern web experience.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The solution is built using a cloud-native, micro-frontend and microservice-inspired architecture that emphasizes scalability, maintainability, security, and independent feature evolution.
 
-## Project setup
+---
 
-```bash
-$ npm install
+## Architecture Principles
+
+* Domain-driven modular design
+* API-first development
+* Micro-frontend ready architecture
+* Secure JWT-based authentication
+* Stateless backend services
+* Event-driven extensibility
+* Cloud-native deployment model
+* Infrastructure-as-code friendly
+* CI/CD ready
+
+---
+
+## High-Level Architecture
+
+```text
+┌─────────────────────────────────────────────┐
+│                 Browser                      │
+└─────────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│          Next.js Host Shell (BFF)           │
+│---------------------------------------------│
+│ Authentication                              │
+│ Layout & Navigation                         │
+│ API Gateway / Route Handlers                │
+│ Shared Design System                        │
+└─────────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│             NestJS Backend APIs             │
+├─────────────────────────────────────────────┤
+│ Auth Module                                 │
+│ Users Module                                │
+│ Teams Module                                │
+│ Events Module                               │
+│ Results Module                              │
+│ Leaderboard Module                          │
+│ Media Module                                │
+└─────────────────────────────────────────────┘
+                     │
+       ┌─────────────┼─────────────┐
+       ▼             ▼             ▼
+ PostgreSQL       Redis         MinIO/S3
+ Persistence      Cache         Media Storage
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Frontend Architecture
 
-# watch mode
-$ npm run start:dev
+### Technology Stack
 
-# production mode
-$ npm run start:prod
+* Next.js 15+
+* React 19
+* TypeScript
+* Tailwind CSS
+* TanStack Query
+* Zustand
+* Module Federation (future)
+* Storybook
+
+### Frontend Responsibilities
+
+* Authentication and session management
+* Team management UI
+* Event scheduling and registration
+* Results and leaderboard visualization
+* Media gallery and voting experience
+* Responsive and accessible user interfaces
+
+### Future Micro Frontends
+
+```text
+host-shell
+├── mfe-auth
+├── mfe-teams
+├── mfe-events
+├── mfe-results
+├── mfe-leaderboard
+└── mfe-media
 ```
 
-## Run tests
+Each micro frontend can be independently developed, deployed, and versioned while sharing a common design system and authentication layer.
 
-```bash
-# unit tests
-$ npm run test
+---
 
-# e2e tests
-$ npm run test:e2e
+## Backend Architecture
 
-# test coverage
-$ npm run test:cov
+### Technology Stack
+
+* NestJS
+* TypeScript
+* Prisma ORM
+* PostgreSQL
+* JWT Authentication
+* Swagger/OpenAPI
+* Redis
+* MinIO
+
+### Core Modules
+
+#### Auth Module
+
+Handles registration, login, refresh tokens, JWT generation, and authorization.
+
+#### Users Module
+
+User profile management and account operations.
+
+#### Teams Module
+
+Team creation, membership management, captains, vice captains, and team administration.
+
+#### Events Module
+
+Event scheduling, categorization, venue management, subscriptions, and participation.
+
+#### Results Module
+
+Result submission, validation, and point allocation.
+
+#### Leaderboard Module
+
+Aggregate scoring and ranking across teams and categories.
+
+#### Media Module
+
+Photo uploads, videos, team introductions, and gallery management.
+
+---
+
+## Data Architecture
+
+### Primary Database
+
+PostgreSQL serves as the system of record.
+
+Core entities include:
+
+* User
+* Team
+* TeamMember
+* Edition
+* Category
+* Event
+* Result
+* Media
+* Vote
+* RefreshToken
+
+### Relationships
+
+```text
+Edition
+ ├── Teams
+ ├── Categories
+ └── Events
+
+Team
+ ├── Members
+ ├── Media
+ └── Results
+
+Event
+ ├── Results
+ └── Subscriptions
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Security Model
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Authentication
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+* JWT Access Token
+* Refresh Token Rotation
+* BCrypt Password Hashing
+* Stateless API Authentication
+
+### Authorization
+
+Platform Roles:
+
+* ADMIN
+* USER
+
+Team Roles:
+
+* MEMBER
+* VICE_CAPTAIN
+* CAPTAIN
+* TEAM_ADMIN
+
+### Security Controls
+
+* Route Guards
+* Role Guards
+* Input Validation
+* DTO Enforcement
+* Secure Password Storage
+* HttpOnly Refresh Tokens
+* Helmet Security Headers
+
+---
+
+## Caching Strategy
+
+### Redis
+
+Used for:
+
+* Leaderboard caching
+* Frequently accessed event data
+* Team statistics
+* Session-related metadata
+
+Cache invalidation occurs automatically when results, teams, or events change.
+
+---
+
+## Media Storage
+
+### MinIO (Local Development)
+
+Stores:
+
+* Team logos
+* Team introduction videos
+* Event photos
+* Event videos
+
+### S3 Compatible Production Storage
+
+The storage layer can be replaced with AWS S3, Azure Blob Storage, or Google Cloud Storage without application changes.
+
+---
+
+## Deployment Strategy
+
+### Development
+
+```text
+Next.js
+NestJS
+PostgreSQL (Docker)
+Redis (Docker)
+MinIO (Docker)
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Production
 
-## Resources
+```text
+Load Balancer
+       │
+ ┌─────┴─────┐
+ │ Next.js   │
+ │ NestJS    │
+ └─────┬─────┘
+       │
+ PostgreSQL
+ Redis
+ Object Storage
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Future Enhancements
 
-## Support
+* RabbitMQ Event Processing
+* Real-time Notifications
+* Live Scoring
+* WebSocket Event Updates
+* Mobile Applications
+* AI-Based Event Insights
+* Multi-Tenant Support
+* Kubernetes Deployment
+* Observability with Prometheus and Grafana
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## Repository Goal
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This repository demonstrates enterprise-grade frontend and backend architecture practices, including modular domain design, secure authentication, scalable APIs, micro-frontend readiness, and cloud-native deployment patterns through a real-world celebrations and event management platform.
