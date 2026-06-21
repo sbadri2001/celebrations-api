@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 
@@ -53,7 +54,7 @@ export class TeamsController {
     return this.teamsService.findById(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id')
     id: string,

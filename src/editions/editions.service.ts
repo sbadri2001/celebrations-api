@@ -178,4 +178,26 @@ export class EditionsService {
       message: 'Edition deleted successfully',
     };
   }
+
+  async getTeamsByEdition(editionId: string) {
+    const edition = await this.prisma.edition.findUnique({
+      where: {
+        id: editionId,
+      },
+
+      include: {
+        teams: {
+          orderBy: {
+            name: 'asc',
+          },
+        },
+      },
+    });
+
+    if (!edition) {
+      throw new NotFoundException('Edition not found');
+    }
+
+    return edition.teams;
+  }
 }

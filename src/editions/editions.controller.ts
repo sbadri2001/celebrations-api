@@ -80,4 +80,9 @@ export class EditionsController {
   ) {
     return this.editionsService.delete(id);
   }
+
+  @Get(':id/teams')
+  getTeamsByEdition(@Param('id') id: string) {
+    return this.editionsService.getTeamsByEdition(id);
+  }
 }

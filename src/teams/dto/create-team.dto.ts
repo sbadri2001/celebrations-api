@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateTeamDto {
@@ -7,6 +8,13 @@ export class CreateTeamDto {
   @IsString()
   block: string;
 
+  @Transform(({ value }) => {
+    if (value === '' || value === null) {
+      return undefined;
+    }
+
+    return value;
+  })
   @IsOptional()
   @IsEmail()
   email?: string;
